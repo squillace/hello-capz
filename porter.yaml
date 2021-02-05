@@ -3,9 +3,9 @@
 # See https://porter.sh/author-bundles for documentation on how to configure your bundle
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
-name: capz-hello
-version: 0.1.0
-description: "An example Porter configuration"
+name: capz
+version: 0.1.1
+description: "Installs and deletes the Cluster API Azure provider on a kubernetes cluster."
 # TODO: update the registry to your own, e.g. myregistry
 registry: ghcr.io/squillace
 
@@ -22,62 +22,14 @@ install:
 #export AZURE_TENANT_ID_B64="$(echo -n "$AZURE_TENANT_ID" | base64 | tr -d '\n')"
 #export AZURE_CLIENT_ID_B64="$(echo -n "$AZURE_CLIENT_ID" | base64 | tr -d '\n')"
 #export AZURE_CLIENT_SECRET_B64="$(echo -n "$AZURE_CLIENT_SECRET" | base64 | tr -d '\n')"
-  - exec:
-      command: bash
-      description: ""
-      suppress-output: false
-      flags:
-        c: "'env'"
 
-  - exec:
-      command: bash
-      description: "Encoding parameters to base64..."
-      suppress-output: true
-      flags:
-        c: "'echo -n {{bundle.credentials.AZURE_SUBSCRIPTION_ID}} | base64'"
-      outputs:
-        - name: AZURE_SUBSCRIPTION_ID_B64
-          regex: "(.*)"
-          env: "AZURE_SUBSCRIPTION_ID_B64"
-  - exec:
-      command: bash
-      description: "Encoding parameters to base64..."
-      suppress-output: true
-      flags:
-        c: "'echo -n {{bundle.credentials.AZURE_TENANT_ID}} | base64'"
-      outputs:
-        - name: AZURE_TENANT_ID_B64
-          regex: "(.*)"
-  - exec:
-      command: bash
-      description: "Encoding parameters to base64..."
-      suppress-output: true
-      flags:
-        c: "'echo -n {{bundle.credentials.AZURE_CLIENT_ID}} | base64'"
-      outputs:
-        - name: AZURE_CLIENT_ID_B64
-          regex: "(.*)"
-  - exec:
-      command: bash
-      description: "Encoding parameters to base64..."
-      suppress-output: true
-      flags:
-        c: "'echo -n {{bundle.credentials.AZURE_CLIENT_SECRET}} | base64'"
-      outputs:
-        - name: AZURE_CLIENT_SECRET_B64
-          regex: "(.*)"
   - capz:
       description: "Installing Cluster API into the cluster...."
       arguments:
-        - "version" # "init"
-#      flags:
-#        infrastructure: "azure"
-  - exec:
-      command: bash
-      description: ""
-      suppress-output: false
+        - "init"
       flags:
-        c: "'env'"
+        infrastructure: "azure"
+
 upgrade:
   - exec:
       description: "World 2.0"
@@ -95,6 +47,24 @@ uninstall:
         include-crd: ""
         include-namespace: ""
 
+
+#Available Commands:
+#  completion  Output shell completion code for the specified shell (bash or zsh)
+#  config      Display provider configuration and templates to create workload clusters.
+#  delete      Delete one or more providers from the management cluster.
+#  describe    Describe workload clusters.
+#  generate    Generate yaml using clusterctl yaml processor.
+#  get         Get info from a management or a workload cluster
+#  help        Help about any command
+#  init        Initialize a management cluster.
+#  move        Move Cluster API objects and all dependencies between management clusters.
+#  upgrade     Upgrade core and provider components in a management cluster.
+#  version     Print clusterctl version.
+
+#Flags:
+#      --config $HOME/.cluster-api/clusterctl.yaml   Path to clusterctl configuration (default is $HOME/.cluster-api/clusterctl.yaml) or to a remote location (i.e. https://example.com/clusterctl.yaml)
+#  -h, --help                                        help for clusterctl
+#  -v, --v int                                       Set the log level verbosity. This overrides the CLUSTERCTL_LOG_LEVEL environment variable.
 
 # Below is an example of how to define credentials
 # See https://porter.sh/author-bundles/#credentials
@@ -115,6 +85,22 @@ credentials:
     description: "The Azure client or app id"
   - name: AZURE_CLIENT_SECRET
     env: AZURE_CLIENT_SECRET
+    type: string
+    description: "The Azure app password or secret in base 64"  
+  - name: AZURE_SUBSCRIPTION_ID_B64
+    env: AZURE_SUBSCRIPTION_ID_B64
+    type: string
+    description: "The Azure subscription id in base 64"
+  - name: AZURE_TENANT_ID_B64
+    env: AZURE_TENANT_ID_B64
+    type: string
+    description: "The Azure tenant id in base 64"
+  - name: AZURE_CLIENT_ID_B64
+    env: AZURE_CLIENT_ID_B64
+    type: string
+    description: "The Azure client or app id in base 64"
+  - name: AZURE_CLIENT_SECRET_B64
+    env: AZURE_CLIENT_SECRET_B64
     type: string
     description: "The Azure app password or secret"  
   - name: AZURE_ENVIRONMENT

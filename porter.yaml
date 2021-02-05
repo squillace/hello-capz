@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: capz
-version: 0.1.2
+version: 0.1.3
 description: "Installs and deletes the Cluster API Azure provider on a kubernetes cluster."
 # TODO: update the registry to your own, e.g. myregistry
 registry: ghcr.io/squillace
@@ -51,8 +51,11 @@ uninstall:
       command: kubectl
       description: "TEMPORARY: Destroying the remaining capi and cert-manager namespaces."
       suppress-output: false
-      flags:
-        c: "kubectl delete ns capi-webhook-system cert-manager"
+      arguments:
+        - "delete"
+        - "ns"
+        - "capi-webhook-system"
+        - "cert-manager"
 
 
 #Available Commands:

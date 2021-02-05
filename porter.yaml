@@ -43,8 +43,7 @@ uninstall:
       arguments:
         - "delete"
       flags:
-        infrastructure: "azure"
-        include-crd: ""
+        all: ""
         include-namespace: ""
 
 

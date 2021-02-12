@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: capz
-version: 0.1.3
+version: 0.1.4
 description: "Installs and deletes the Cluster API Azure provider on a kubernetes cluster."
 # TODO: update the registry to your own, e.g. myregistry
 registry: ghcr.io/squillace
@@ -18,6 +18,12 @@ mixins:
   - capz
   - kubernetes
 
+customActions:
+  create-quickstart:
+    description: "Creates a new cluster using clusterctl."
+    stateless: false
+    modifies: true
+
 install:
 #export AZURE_SUBSCRIPTION_ID_B64="$(echo -n "$AZURE_SUBSCRIPTION_ID" | base64 | tr -d '\n')"
 #export AZURE_TENANT_ID_B64="$(echo -n "$AZURE_TENANT_ID" | base64 | tr -d '\n')"
@@ -30,6 +36,51 @@ install:
         - "init"
       flags:
         infrastructure: "azure"
+
+create-quickstart:
+  - capz:
+      description: "Creating the cluster configuration file..."
+      arguments:
+        - "config"
+        - "cluster"
+        - "capi-quickstart"
+      flags:
+        kubernetes-version: "v1.18.2"
+        control-plane-machine-count: "3"
+        worker-machine-count: "3"
+      outputs:
+        - name: quickstart-yaml
+          type: file
+          path: "/cnab/app/quickstart.yaml"
+  - exec:
+      command: "bash"
+      description: "checking the yaml.."
+      suppress-output: false
+      flags:
+        c: "'cat {{bundle.outputs.quickstart-yaml}}'"
+  - exec:
+      command: bash
+      description: "env"
+      suppress-output: false
+      flags:
+        c: '"exit 1"'
+  - kubernetes:
+      description: "Creating a cluster...."
+      manifests:
+        - "capi-quickstart.yaml"
+#      overwrite: true
+#      prune: true
+#      validate: true
+#      wait: true 
+  - exec:
+      command: kubectl
+      description: "configuring CNI"
+      suppress-output: false
+      arguments:
+        - apply
+      flags:
+        kubeconfig: "capi-quickstart.yaml"
+        f: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/master/templates/addons/calico.yaml
 
 upgrade:
   - exec:
@@ -75,6 +126,27 @@ uninstall:
 #      --config $HOME/.cluster-api/clusterctl.yaml   Path to clusterctl configuration (default is $HOME/.cluster-api/clusterctl.yaml) or to a remote location (i.e. https://example.com/clusterctl.yaml)
 #  -h, --help                                        help for clusterctl
 #  -v, --v int                                       Set the log level verbosity. This overrides the CLUSTERCTL_LOG_LEVEL environment variable.
+
+parameters:
+  - name: AZURE_LOCATION
+    type: string
+    env: AZURE_LOCATION
+    description: "the Azure location to use for the cluster."
+    default: "eastus2"
+  - name: AZURE_CONTROL_PLANE_MACHINE_TYPE
+    env: AZURE_CONTROL_PLANE_MACHINE_TYPE
+    type: string
+    description: "The control plane sku"
+    default: "Standard_D2s_v3"
+  - name: AZURE_NODE_MACHINE_TYPE
+    env: AZURE_NODE_MACHINE_TYPE
+    type: string
+    description: "the sku"
+    default: "Standard_D2s_v3"
+
+# Select VM types.
+#export AZURE_CONTROL_PLANE_MACHINE_TYPE="Standard_D2s_v3"
+#export AZURE_NODE_MACHINE_TYPE="Standard_D2s_v3"
 
 # Below is an example of how to define credentials
 # See https://porter.sh/author-bundles/#credentials

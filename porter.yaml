@@ -63,9 +63,6 @@ create-quickstart:
       description: "Creating a cluster...."
       manifests:
         - "quickstart.yaml"
-      overwrite: true
-      prune: true
-      validate: true
       wait: true 
   - exec:
       command: kubectl

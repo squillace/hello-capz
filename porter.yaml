@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: capz
-version: 0.1.8
+version: 0.1.9
 description: "Installs and deletes the Cluster API Azure provider on a kubernetes cluster, and contains actions to create and delete a cluster using the management cluster."
 # TODO: update the registry to your own, e.g. myregistry
 registry: ghcr.io/squillace
@@ -122,9 +122,10 @@ delete-quickstart:
         - "delete"
         - "cluster"
         - "capi-quickstart"
+        - "--wait=false"
       flags: 
         namespace: "default"
-        wait: "false"
+        
 
 upgrade:
   - exec:

@@ -4,8 +4,8 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: capz
-version: 0.1.5
-description: "Installs and deletes the Cluster API Azure provider on a kubernetes cluster."
+version: 0.1.7
+description: "Installs and deletes the Cluster API Azure provider on a kubernetes cluster, and contains actions to create and delete a cluster using the management cluster."
 # TODO: update the registry to your own, e.g. myregistry
 registry: ghcr.io/squillace
 
@@ -23,12 +23,28 @@ customActions:
     description: "Creates a new cluster using clusterctl."
     stateless: false
     modifies: true
+customActions:
+  delete-quickstart:
+    description: "Deletes a new cluster using clusterctl."
+    stateless: false
+    modifies: true
+
+outputs:
+  - name: capi-quickstart-creation-config
+    type: file
+    description: "The configuration file for clusterctl to find the control plane."
+    path: "/cnab/app/quickstart.yaml"
+    applyTo:
+      - "create-quickstart"
+
+  - name: capi-quickstart-kubeconfig
+    type: file
+    description: "The kubeconfig file for the new cluster."
+    path: "/cnab/app/capi-quickstart-kubeconfig.yaml"
+    applyTo:
+      - "create-quickstart"
 
 install:
-#export AZURE_SUBSCRIPTION_ID_B64="$(echo -n "$AZURE_SUBSCRIPTION_ID" | base64 | tr -d '\n')"
-#export AZURE_TENANT_ID_B64="$(echo -n "$AZURE_TENANT_ID" | base64 | tr -d '\n')"
-#export AZURE_CLIENT_ID_B64="$(echo -n "$AZURE_CLIENT_ID" | base64 | tr -d '\n')"
-#export AZURE_CLIENT_SECRET_B64="$(echo -n "$AZURE_CLIENT_SECRET" | base64 | tr -d '\n')"
 
   - capz:
       description: "Installing Cluster API into the cluster...."
@@ -58,12 +74,29 @@ create-quickstart:
       command: capture.sh
       description: "Creating a configuration..."
       suppress-output: false
-
+      outputs:
+        - name: capi-quickstart-creation-config
+          path: quickstart.yaml
+        
   - kubernetes:
       description: "Creating a cluster...."
       manifests:
         - "quickstart.yaml"
       wait: true 
+  - exec:
+      command: wait-on-control-plane.sh
+      description: "Waiting for the new cluster's control plane to be available... this can take a few minutes." 
+      suppress-output: false
+
+  - exec:
+      command: bash
+      description: "Getting the config file to configure CNI....."
+      suppress-output: false
+      flags:
+        c: '"clusterctl get kubeconfig capi-quickstart > capi-quickstart-kubeconfig.yaml"'
+      outputs:
+        - name: capi-quickstart-kubeconfig
+          path: capi-quickstart-kubeconfig.yaml
   - exec:
       command: kubectl
       description: "configuring CNI"
@@ -71,8 +104,22 @@ create-quickstart:
       arguments:
         - apply
       flags:
-        kubeconfig: "capi-quickstart.yaml"
+        kubeconfig: "capi-quickstart-kubeconfig.yaml"
         f: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/master/templates/addons/calico.yaml
+
+
+delete-quickstart:
+  - exec:
+      command: kubectl
+      description: "Deleting the capi-quickstart cluster...."
+      suppress-output: false
+      arguments:
+        - "delete"
+        - "cluster"
+        - "capi-quickstart"
+      flags: 
+        namespace: "default"
+        wait: "false"
 
 upgrade:
   - exec:

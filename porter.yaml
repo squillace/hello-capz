@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: capz
-version: 0.1.4
+version: 0.1.5
 description: "Installs and deletes the Cluster API Azure provider on a kubernetes cluster."
 # TODO: update the registry to your own, e.g. myregistry
 registry: ghcr.io/squillace
@@ -38,40 +38,35 @@ install:
         infrastructure: "azure"
 
 create-quickstart:
-  - capz:
-      description: "Creating the cluster configuration file..."
-      arguments:
-        - "config"
-        - "cluster"
-        - "capi-quickstart"
-      flags:
-        kubernetes-version: "v1.18.2"
-        control-plane-machine-count: "3"
-        worker-machine-count: "3"
-      outputs:
-        - name: quickstart-yaml
-          type: file
-          path: "/cnab/app/quickstart.yaml"
+#  - capz:
+#      description: "Creating the cluster configuration file..."
+#      suppress-output: false
+#      arguments:
+#        - "config"
+#        - "cluster"
+#        - "capi-quickstart"
+#      flags:
+#        kubernetes-version: "v1.18.2"
+#        control-plane-machine-count: "3"
+#        worker-machine-count: "3"
+#      outputs:
+#        - name: QUICKSTART_YAML
+#          regex: "(.*)"
+#          path: "/cnab/app/quickstart.yaml"
+
   - exec:
-      command: "bash"
-      description: "checking the yaml.."
+      command: capture.sh
+      description: "Creating a configuration..."
       suppress-output: false
-      flags:
-        c: "'cat {{bundle.outputs.quickstart-yaml}}'"
-  - exec:
-      command: bash
-      description: "env"
-      suppress-output: false
-      flags:
-        c: '"exit 1"'
+
   - kubernetes:
       description: "Creating a cluster...."
       manifests:
-        - "capi-quickstart.yaml"
-#      overwrite: true
-#      prune: true
-#      validate: true
-#      wait: true 
+        - "quickstart.yaml"
+      overwrite: true
+      prune: true
+      validate: true
+      wait: true 
   - exec:
       command: kubectl
       description: "configuring CNI"
@@ -153,22 +148,6 @@ parameters:
 credentials:
   - name: kubeconfig
     path: /root/.kube/config
-  - name: AZURE_SUBSCRIPTION_ID
-    env: AZURE_SUBSCRIPTION_ID
-    type: string
-    description: "The Azure subscription id"
-  - name: AZURE_TENANT_ID
-    env: AZURE_TENANT_ID
-    type: string
-    description: "The Azure tenant id"
-  - name: AZURE_CLIENT_ID
-    env: AZURE_CLIENT_ID
-    type: string
-    description: "The Azure client or app id"
-  - name: AZURE_CLIENT_SECRET
-    env: AZURE_CLIENT_SECRET
-    type: string
-    description: "The Azure app password or secret in base 64"  
   - name: AZURE_SUBSCRIPTION_ID_B64
     env: AZURE_SUBSCRIPTION_ID_B64
     type: string
@@ -190,11 +169,20 @@ credentials:
     default: AzurePublicCloud
     type: string
     description: "The Azure cloud environment into which to deploy"
+  - name: AZURE_SUBSCRIPTION_ID
+    env: AZURE_SUBSCRIPTION_ID
+    default: AzurePublicCloud
+    type: string
+    description: "The Azure cloud environment into which to deploy"
+  - name: GITHUB_TOKEN
+    env: GITHUB_TOKEN
+    type: string
+    description: "A GitHub personal access token to work around gh api quota limits temporarily."
 #  - name: username
 #    env: USERNAME
 
 # Below is an example of how to define parameters
 # See https://porter.sh/author-bundles/#parameters
-
+    
 
 

@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: capz
-version: 0.1.9
+version: 0.1.10
 description: "Installs and deletes the Cluster API Azure provider on a kubernetes cluster, and contains actions to create and delete a cluster using the management cluster."
 # TODO: update the registry to your own, e.g. myregistry
 registry: ghcr.io/squillace
@@ -189,9 +189,6 @@ parameters:
     description: "the sku"
     default: "Standard_D2s_v3"
 
-# Select VM types.
-#export AZURE_CONTROL_PLANE_MACHINE_TYPE="Standard_D2s_v3"
-#export AZURE_NODE_MACHINE_TYPE="Standard_D2s_v3"
 
 # Below is an example of how to define credentials
 # See https://porter.sh/author-bundles/#credentials
@@ -236,3 +233,63 @@ credentials:
     
 
 
+custom:
+  com.azure.creatuidef:
+    blades:
+      Azure:
+        displayOrder: 1
+        label: Azure Properties
+      Additional:
+        displayOrder: 2
+        label: Additional Properties
+    elements:
+      - name: kubeconfig
+        tooltip: A Kubernetes cluster to create the management infrastructure
+        displayName: AKS Cluster
+        displayOrder: 1
+        uitype: Microsoft.Common.TextBox
+        bladename: Azure
+      - name: deploymentTime
+        hide: true
+      - name: cnab_installation_name
+        displayOrder: 2
+        tooltip: The CNAB Bundle installation name
+        displayName: CNAB Installation Name
+        bladename: Additional
+      - name: AZURE_SUBSCRIPTION_ID_B64
+        displayOrder: 1
+        tooltip: The base64 encoded azure subscription ID
+        displayName: base64 encoded subscription ID
+        bladename: Azure
+        uitype: Microsoft.Common.PasswordBox
+      - name: AZURE_ENVIRONMENT
+        displayOrder: 1
+        tooltip: The Azure environment you want to use.
+        default: AzurePublicCloud
+        displayName: Azure Environment
+        bladename: Azure
+        uitype: Microsoft.Common.TextBox
+      - name: AZURE_CLIENT_SECRET_B64
+        displayOrder: 1
+        tooltip: The base64-encoded Azure SP client secret.
+        displayName: base64-encoded Azure SP client secret
+        bladename: Azure
+        uitype: Microsoft.Common.PasswordBox
+      - name: AZURE_CLIENT_ID_B64
+        displayOrder: 1
+        tooltip: The base64-encoded Azure SP client ID
+        displayName: base64-encoded Azure SP Client ID
+        bladename: Azure
+        uitype: Microsoft.Common.PasswordBox
+      - name: AZURE_TENANT_ID_B64
+        displayOrder: 1
+        tooltip: The base64-encoded Azure tenant ID
+        displayName: base64-encoded Azure tenant ID
+        bladename: Azure
+        uitype: Microsoft.Common.PasswordBox
+      - name: GITHUB_TOKEN
+        displayOrder: 1
+        tooltip: GitHub Personal Access Token to ensure automation scenarios
+        displayName: GitHub Personal Access Token
+        bladename: Additional
+        uitype: Microsoft.Common.PasswordBox

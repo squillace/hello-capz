@@ -4,7 +4,7 @@
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
 name: capz
-version: 0.1.10
+version: 0.1.11
 description: "Installs and deletes the Cluster API Azure provider on a kubernetes cluster, and contains actions to create and delete a cluster using the management cluster."
 # TODO: update the registry to your own, e.g. myregistry
 registry: ghcr.io/squillace
@@ -238,10 +238,10 @@ custom:
     blades:
       Azure:
         displayOrder: 1
-        label: Azure Properties
+        label: Azure
       Additional:
         displayOrder: 2
-        label: Additional Properties
+        label: Additional Credentials
     elements:
       - name: kubeconfig
         tooltip: A Kubernetes cluster to create the management infrastructure
@@ -252,10 +252,10 @@ custom:
       - name: deploymentTime
         hide: true
       - name: cnab_installation_name
-        displayOrder: 2
+#        displayOrder: 2
         tooltip: The CNAB Bundle installation name
         displayName: CNAB Installation Name
-        bladename: Additional
+#        bladename: Additional
       - name: AZURE_SUBSCRIPTION_ID_B64
         displayOrder: 1
         tooltip: The base64 encoded azure subscription ID
@@ -264,7 +264,7 @@ custom:
         uitype: Microsoft.Common.PasswordBox
       - name: AZURE_ENVIRONMENT
         displayOrder: 1
-        tooltip: The Azure environment you want to use.
+        tooltip: The Azure environment you want to use (default AzurePublicCloud).
         default: AzurePublicCloud
         displayName: Azure Environment
         bladename: Azure

@@ -39,6 +39,9 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_PASSWORD }}
-      - name: Porter publish to ghcr.io
+      - name: Retag bundle for ghcr.io
         run: |
-          porter publish --debug
+          grep -oP -m 1 "(?<=version: )(\d.\d.\d)+" porter.yaml
+          porter build --version "$(grep -oP -m 1 "(?<=version: )[0-9].[0-9].[0-9]+" porter.yaml)"-$(git rev-list --max-count=1 HEAD)
+      - name: Porter publish to ghcr.io
+        run: porter publish --registry ghcr.io/${{ github.repository_owner }}

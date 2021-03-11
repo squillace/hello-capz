@@ -239,9 +239,6 @@ custom:
       Azure:
         displayOrder: 1
         label: Azure
-      Additional:
-        displayOrder: 2
-        label: Additional Credentials
     elements:
       - name: kubeconfig
         tooltip: A Kubernetes cluster to create the management infrastructure
@@ -251,24 +248,12 @@ custom:
         bladename: Azure
       - name: deploymentTime
         hide: true
-      - name: cnab_installation_name
-#        displayOrder: 2
-        tooltip: The CNAB Bundle installation name
-        displayName: CNAB Installation Name
-#        bladename: Additional
       - name: AZURE_SUBSCRIPTION_ID_B64
         displayOrder: 1
         tooltip: The base64 encoded azure subscription ID
         displayName: base64 encoded subscription ID
         bladename: Azure
         uitype: Microsoft.Common.PasswordBox
-      - name: AZURE_ENVIRONMENT
-        displayOrder: 1
-        tooltip: The Azure environment you want to use (default AzurePublicCloud).
-        default: AzurePublicCloud
-        displayName: Azure Environment
-        bladename: Azure
-        uitype: Microsoft.Common.TextBox
       - name: AZURE_CLIENT_SECRET_B64
         displayOrder: 1
         tooltip: The base64-encoded Azure SP client secret.
@@ -291,5 +276,4 @@ custom:
         displayOrder: 1
         tooltip: GitHub Personal Access Token to ensure automation scenarios
         displayName: GitHub Personal Access Token
-        bladename: Additional
         uitype: Microsoft.Common.PasswordBox

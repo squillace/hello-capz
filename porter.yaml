@@ -239,12 +239,6 @@ custom:
         displayOrder: 1
         label: Azure
     elements:
-      - name: kubeconfig
-        tooltip: A Kubernetes cluster to create the management infrastructure
-        displayName: AKS Cluster
-        displayOrder: 1
-        uitype: Microsoft.Common.TextBox
-        bladename: Azure
       - name: deploymentTime
         hide: true
       - name: AZURE_SUBSCRIPTION_ID_B64

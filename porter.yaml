@@ -219,7 +219,7 @@ credentials:
   - name: AZURE_SUBSCRIPTION_ID
     env: AZURE_SUBSCRIPTION_ID
     type: string
-    description: "The Azure cloud environment into which to deploy"
+    description: "The Azure subscription id"
   - name: GITHUB_TOKEN
     env: GITHUB_TOKEN
     type: string
@@ -238,6 +238,9 @@ custom:
       Azure:
         displayOrder: 1
         label: Azure
+      GitHub:
+        displayOrder: 2
+        label: GitHub
     elements:
       - name: deploymentTime
         hide: true
@@ -247,26 +250,32 @@ custom:
         displayName: base64 encoded subscription ID
         bladename: Azure
         uitype: Microsoft.Common.PasswordBox
-      - name: AZURE_CLIENT_SECRET_B64
+      - name: AZURE_SUBSCRIPTION_ID
         displayOrder: 3
+        tooltip: The Azure subscription id
+        displayName: Azure subscription id
+        bladename: Azure
+        uitype: Microsoft.Common.PasswordBox
+      - name: AZURE_CLIENT_SECRET_B64
+        displayOrder: 4
         tooltip: The base64-encoded Azure SP client secret.
         displayName: base64-encoded Azure SP client secret
         bladename: Azure
         uitype: Microsoft.Common.PasswordBox
       - name: AZURE_CLIENT_ID_B64
-        displayOrder: 4
+        displayOrder: 5
         tooltip: The base64-encoded Azure SP client ID
         displayName: base64-encoded Azure SP Client ID
         bladename: Azure
         uitype: Microsoft.Common.PasswordBox
       - name: AZURE_TENANT_ID_B64
-        displayOrder: 5
+        displayOrder: 6
         tooltip: The base64-encoded Azure tenant ID
         displayName: base64-encoded Azure tenant ID
         bladename: Azure
         uitype: Microsoft.Common.PasswordBox
       - name: GITHUB_TOKEN
-        displayOrder: 6
         tooltip: GitHub Personal Access Token to ensure automation scenarios
         displayName: GitHub Personal Access Token
         uitype: Microsoft.Common.PasswordBox
+        bladename: GitHub

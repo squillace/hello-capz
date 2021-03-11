@@ -188,7 +188,11 @@ parameters:
     type: string
     description: "the sku"
     default: "Standard_D2s_v3"
-
+  - name: AZURE_ENVIRONMENT
+    env: AZURE_ENVIRONMENT
+    default: AzurePublicCloud
+    type: string
+    description: "The Azure cloud environment into which to deploy. The default is AzurePublicCloud."
 
 # Below is an example of how to define credentials
 # See https://porter.sh/author-bundles/#credentials
@@ -211,11 +215,6 @@ credentials:
     env: AZURE_CLIENT_SECRET_B64
     type: string
     description: "The Azure app password or secret"  
-  - name: AZURE_ENVIRONMENT
-    env: AZURE_ENVIRONMENT
-    default: AzurePublicCloud
-    type: string
-    description: "The Azure cloud environment into which to deploy"
   - name: AZURE_SUBSCRIPTION_ID
     env: AZURE_SUBSCRIPTION_ID
     type: string
@@ -279,3 +278,4 @@ custom:
         displayName: GitHub Personal Access Token
         uitype: Microsoft.Common.PasswordBox
         bladename: GitHub
+

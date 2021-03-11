@@ -248,31 +248,31 @@ custom:
       - name: deploymentTime
         hide: true
       - name: AZURE_SUBSCRIPTION_ID_B64
-        displayOrder: 1
+        displayOrder: 2
         tooltip: The base64 encoded azure subscription ID
         displayName: base64 encoded subscription ID
         bladename: Azure
         uitype: Microsoft.Common.PasswordBox
       - name: AZURE_CLIENT_SECRET_B64
-        displayOrder: 1
+        displayOrder: 3
         tooltip: The base64-encoded Azure SP client secret.
         displayName: base64-encoded Azure SP client secret
         bladename: Azure
         uitype: Microsoft.Common.PasswordBox
       - name: AZURE_CLIENT_ID_B64
-        displayOrder: 1
+        displayOrder: 4
         tooltip: The base64-encoded Azure SP client ID
         displayName: base64-encoded Azure SP Client ID
         bladename: Azure
         uitype: Microsoft.Common.PasswordBox
       - name: AZURE_TENANT_ID_B64
-        displayOrder: 1
+        displayOrder: 5
         tooltip: The base64-encoded Azure tenant ID
         displayName: base64-encoded Azure tenant ID
         bladename: Azure
         uitype: Microsoft.Common.PasswordBox
       - name: GITHUB_TOKEN
-        displayOrder: 1
+        displayOrder: 6
         tooltip: GitHub Personal Access Token to ensure automation scenarios
         displayName: GitHub Personal Access Token
         uitype: Microsoft.Common.PasswordBox

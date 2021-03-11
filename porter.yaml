@@ -218,7 +218,6 @@ credentials:
     description: "The Azure cloud environment into which to deploy"
   - name: AZURE_SUBSCRIPTION_ID
     env: AZURE_SUBSCRIPTION_ID
-    default: AzurePublicCloud
     type: string
     description: "The Azure cloud environment into which to deploy"
   - name: GITHUB_TOKEN
